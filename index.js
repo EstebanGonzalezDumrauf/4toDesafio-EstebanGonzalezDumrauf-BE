@@ -1,199 +1,64 @@
-const { log } = require('console');
-const fs = require('fs');
+const ManagerProductos = require("./productManager");
 
-class ProductManager {
+async function main() {
+    try {
+        //Se creará una instancia de la clase “ProductManager”
+        const manejadorDeProductos = new ManagerProductos();
 
-    #path = "";
+        //Se llamará “getProducts” recién creada la instancia, debe devolver un arreglo vacío []
 
-    constructor() {
-        this.products = [];
-        this.path = "BD.json";
-    };
+        let products = await manejadorDeProductos.getProducts();
+        console.log(products);
 
+        //Se cargan 3 productos correctamente
+        manejadorDeProductos.addProduct("Jabon Natura", "Jabon para cuerpo y manos", 125, "/img/limpieza/jabon01.jpg", "AB-100", 50);
+        manejadorDeProductos.addProduct("Shampoo Clear", "Shampoo anticaspa", 740, "/img/cuidado/shampoo01.jpg", "SH-200", 20);
+        manejadorDeProductos.addProduct("Colgate Triple Accion", "Pasta dental", 600, "/img/cuidado/shampoo01.jpg", "SH-201", 100);
 
+        //Se llamará al método “addProduct” con los mismos campos de arriba, debe arrojar un error porque el código estará repetido.
+        manejadorDeProductos.addProduct("Colgate Triple Accion", "Pasta dental", 600, "/img/cuidado/shampoo01.jpg", "SH-201", 100);
 
-    addProduct = async (title, description, price, thumbnail, code, stock) => {
-        const producto = {
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock
-        }
+        //Se llamará al método “addProduct” con uno de los campos vacíos, debe arrojar un error.
+        manejadorDeProductos.addProduct("Equate Enjuague bucal", "", 510, "/img/cuidado/foto12.jpg", "EN-602", 15);
 
-        if (this.products.length === 0) {
-            producto.id = 1;
-        } else {
-            producto.id = this.products[this.products.length - 1].id + 1;
-        }
+        //Muestra los 3 productos agregados
+        products = await manejadorDeProductos.getProducts();
+        console.log(products);
 
-        if (title === "") {
-            console.error("Error. El campo titulo no tiene informacion.");
-            return;
-        }
+        //Se llamará al método “addProduct” con un elemento mas.
+        manejadorDeProductos.addProduct("Equate Enjuague bucal", "Enjuague Bucal Sabor Menta", 510, "/img/cuidado/foto12.jpg", "EN-602", 15);
 
-        if (description === "") {
-            console.error("Error. El campo descripción no tiene informacion.");
-            return;
-        }
-
-        if (price === "") {
-            console.error("Error. El campo precio no tiene informacion.");
-            return;
-        }
-
-        if (thumbnail === "") {
-            console.error("Error. El campo ruta de la Imagen no tiene informacion.");
-            return;
-        }
-
-        if (stock === "") {
-            console.error("Error. El campo Stock no tiene informacion.");
-            return;
-        }
-
-        const codeIndex = this.products.findIndex(e => e.code === code);
-        if (codeIndex !== -1) {
-            console.error("Codigo Ya existente");
-            return;
-        }
-
-        this.products.push(producto);
-        await fs.promises.writeFile(this.path, JSON.stringify(this.products))
-    };
-
-
-    getProducts = async () => {
-        try {
-            if (fs.existsSync(this.path)) {
-                const data = await fs.promises.readFile(this.path, 'utf-8');
-                const listadoProductos = JSON.parse(data);
-                //console.log(listadoProductos);
-                return listadoProductos;
-            } else {
-                // Si el archivo no existe, retornar un array vacío o null
-                return [];
-            }
-        } catch (error) {
-            console.error('Error al leer el archivo:', error.message);
-            // En caso de error, puedes retornar un array vacío o null
-            return [];
-        }
-    };
-
-    getProductById = async (id) => {
-        let listadoProductos = [];
-        try {
-            if (fs.existsSync(this.path)) {
-                const byIDdata = await fs.promises.readFile(this.path, 'utf-8');
-                listadoProductos = JSON.parse(byIDdata);
-                //console.log(listadoProductos);
-            }
-        } catch (error) {
-            console.error('Error al leer el archivo:', error.message);
-            // En caso de error, puedes retornar un array vacío o null
-            return [];
-        }
-        const codeIndex = listadoProductos.findIndex(e => e.id === id);
-        console.log(codeIndex);
-        if (codeIndex === -1) {
-            console.error("Producto con ID:" + id + " not Found");
-        } else {
-            console.log (listadoProductos[codeIndex]);
-            return listadoProductos[codeIndex];
-        }
-    };
-
-
-    updateProduct = async (id, newTitle, newDescription, newPrice, newThumbnail, newStock) => {
-        let listadoProductos = [];
-        try {
-            if (fs.existsSync(this.path)) {
-                const byIDdata = await fs.promises.readFile(this.path, 'utf-8');
-                listadoProductos = JSON.parse(byIDdata);
-                console.log(listadoProductos);
-            }
-        } catch (error) {
-            console.error('Error al leer el archivo:', error.message);
-            // En caso de error, puedes retornar un array vacío o null
-            return [];
-        }
-
-        const codeIndex = listadoProductos.findIndex(e => e.id === id);
-        console.log(codeIndex);
-        if (codeIndex === -1) {
-            console.error("Producto con ID:" + id + " not Found");
-        } else {
-            if (newTitle !== '') {
-                listadoProductos[codeIndex].title = newTitle;
-            }
-            if (newDescription !== '') {
-                listadoProductos[codeIndex].description = newDescription;
-            }
-            if (newPrice !== '') {
-                listadoProductos[codeIndex].price = newPrice;
-            }
-            if (newThumbnail !== '') {
-                listadoProductos[codeIndex].thumbnail = newThumbnail;
-            }
-            // if (newCode !== ''){
-            //     this.products[id].code = newCode;
-            // }
-            if (newStock !== '') {
-                listadoProductos[codeIndex].stock = newStock;
-            }
-            console.log(listadoProductos);
-            await fs.promises.writeFile(this.path, JSON.stringify(listadoProductos))
-        }
-        return;
-    }
-
-    deleteProduct = async (id) => {
-        let listadoProductos = [];
-        try {
-            if (fs.existsSync(this.path)) {
-                const byIDdata = await fs.promises.readFile(this.path, 'utf-8');
-                listadoProductos = JSON.parse(byIDdata);
-                console.log(listadoProductos);
-            }
-        } catch (error) {
-            console.error('Error al leer el archivo:', error.message);
-            // En caso de error, puedes retornar un array vacío o null
-            return [];
-        }
-
-        const codeIndexDelete = listadoProductos.findIndex(e => e.id === id);
-        if (codeIndexDelete === -1) {
-            console.error("Producto con ID:" + id + " not Found");
-        } else {
-            listadoProductos.splice(codeIndexDelete, 1);
-            console.log(listadoProductos);
-            await fs.promises.writeFile(this.path, JSON.stringify(listadoProductos))
-        }
-        return;
+    } catch (error) {
+        console.error('Error:', error.message);
     }
 }
 
-//Se creará una instancia de la clase “ProductManager”
-const manejadorDeProductos = new ProductManager();
+main();
 
-//Se llamará “getProducts” recién creada la instancia, debe devolver un arreglo vacío []
-//console.log(manejadorDeProductos.getProducts());
+// Se creará una instancia de la clase “ProductManager”
+// const manejadorDeProductos = new ManagerProductos();
 
-// // //Se cargan 3 productos correctamente
+// Se llamará “getProducts” recién creada la instancia, debe devolver un arreglo vacío []
+
+// const products = await manejadorDeProductos.getProducts();
+// console.log(products);
+// console.log(manejadorDeProductos.getProducts());
+
+// //Se cargan 3 productos correctamente
 // manejadorDeProductos.addProduct("Jabon Natura", "Jabon para cuerpo y manos", 125, "/img/limpieza/jabon01.jpg", "AB-100", 50);
 // manejadorDeProductos.addProduct("Shampoo Clear", "Shampoo anticaspa", 740, "/img/cuidado/shampoo01.jpg", "SH-200", 20);
 // manejadorDeProductos.addProduct("Colgate Triple Accion", "Pasta dental", 600, "/img/cuidado/shampoo01.jpg", "SH-201", 100);
 
-// //Se llamará al método “addProduct” con los mismos campos de arriba, debe arrojar un error porque el código estará repetido.
+// Se llamará al método “addProduct” con los mismos campos de arriba, debe arrojar un error porque el código estará repetido.
 // manejadorDeProductos.addProduct("Colgate Triple Accion", "Pasta dental", 600, "/img/cuidado/shampoo01.jpg", "SH-201", 100);
 
-// //Se llamará al método “addProduct” con uno de los campos vacíos, debe arrojar un error.
+// Se llamará al método “addProduct” con uno de los campos vacíos, debe arrojar un error.
 // manejadorDeProductos.addProduct("Equate Enjuague bucal", "", 510, "/img/cuidado/foto12.jpg", "EN-602", 15);
 
-//Muestra los 3 productos agregados
-//console.log(manejadorDeProductos.getProducts());
+// Muestra los 3 productos agregados
+// products = await manejadorDeProductos.getProducts();
+// console.log(products);
+// console.log(manejadorDeProductos.getProducts());
 
 // //Se evaluará que getProductById devuelva el producto en caso de encontrarlo
 //console.log(manejadorDeProductos.getProductById(2)); 
@@ -209,4 +74,3 @@ const manejadorDeProductos = new ProductManager();
 // manejadorDeProductos.getProductById(2);
 
 //manejadorDeProductos.deleteProduct(2);
-
