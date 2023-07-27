@@ -88,25 +88,23 @@ class ProductManager {
     };
 
     getProductById = async (id) => {
-        let listadoProductos = [];
+        let listadoProductosID = [];
         try {
             if (fs.existsSync(this.path)) {
                 const byIDdata = await fs.promises.readFile(this.path, 'utf-8');
-                listadoProductos = JSON.parse(byIDdata);
-                //console.log(listadoProductos);
+                listadoProductosID = JSON.parse(byIDdata);
             }
         } catch (error) {
             console.error('Error al leer el archivo:', error.message);
             // En caso de error, puedes retornar un array vacío o null
             return [];
         }
-        const codeIndex = listadoProductos.findIndex(e => e.id === id);
-        console.log(codeIndex);
+        const codeIndex = listadoProductosID.findIndex(e => e.id === id);
         if (codeIndex === -1) {
-            console.error("Producto con ID:" + id + " not Found");
+            return ("Producto con ID:" + id + " not Found");
+            //return [];
         } else {
-            console.log (listadoProductos[codeIndex]);
-            return listadoProductos[codeIndex];
+            return listadoProductosID[codeIndex];
         }
     };
 
