@@ -3,14 +3,33 @@ const fs = require('fs');
 
 class ProductManager {
 
-    #path = "";
-
-    constructor() {
+    constructor(path) {
         this.products = [];
-        this.path = "BD.json";
+        this.path = path;
+        //this.products = this.productosAlmacenados();
     };
 
-
+    productosAlmacenados = async () => {
+        try {
+            if (fs.existsSync(this.path)) {
+                const data = await fs.promises.readFile(this.path, 'utf-8');
+                if (data.length === 0) {
+                    return [];
+                } else {
+                    const listadoProductos = JSON.parse(data);
+                    //console.log(listadoProductos);
+                    return listadoProductos;
+                }
+            } else {
+                // Si el archivo no existe, retornar un array vacío o null
+                return [];
+            }
+        } catch (error) {
+            console.error('Error al leer el archivo:', error.message);
+            // En caso de error, puedes retornar un array vacío o null
+            return [];
+        }
+    }
 
     addProduct = async (title, description, price, thumbnail, code, stock) => {
         const producto = {
@@ -22,10 +41,13 @@ class ProductManager {
             stock
         }
 
-        if (this.products.length === 0) {
+        const valorrecuperado = await this.productosAlmacenados();
+        console.log(valorrecuperado);
+
+        if (valorrecuperado.length === 0) {
             producto.id = 1;
         } else {
-            producto.id = this.products[this.products.length - 1].id + 1;
+            producto.id = valorrecuperado[valorrecuperado.length - 1].id + 1;
         }
 
         if (title === "") {
@@ -53,15 +75,14 @@ class ProductManager {
             return;
         }
 
-
-        const codeIndex = this.products.findIndex(e => e.code === code);
+        const codeIndex = valorrecuperado.findIndex(e => e.code === code);
         if (codeIndex !== -1) {
             console.error("Codigo Ya existente");
             return;
         }
 
-        this.products.push(producto);
-        await fs.promises.writeFile(this.path, JSON.stringify(this.products))
+        valorrecuperado.push(producto);
+        await fs.promises.writeFile(this.path, JSON.stringify(valorrecuperado))
     };
 
 
@@ -109,13 +130,13 @@ class ProductManager {
     };
 
 
-    updateProduct = async (id, newTitle, newDescription, newPrice, newThumbnail, newStock) => {
+    updateProduct = async (id, newTitle, newDescription, newPrice, newThumbnail, newCode, newStock) => {
         let listadoProductos = [];
         try {
             if (fs.existsSync(this.path)) {
                 const byIDdata = await fs.promises.readFile(this.path, 'utf-8');
                 listadoProductos = JSON.parse(byIDdata);
-                console.log(listadoProductos);
+                //console.log(listadoProductos);
             }
         } catch (error) {
             console.error('Error al leer el archivo:', error.message);
@@ -124,7 +145,7 @@ class ProductManager {
         }
 
         const codeIndex = listadoProductos.findIndex(e => e.id === id);
-        console.log(codeIndex);
+        //console.log(codeIndex);
         if (codeIndex === -1) {
             console.error("Producto con ID:" + id + " not Found");
         } else {
@@ -140,13 +161,18 @@ class ProductManager {
             if (newThumbnail !== '') {
                 listadoProductos[codeIndex].thumbnail = newThumbnail;
             }
-            // if (newCode !== ''){
-            //     this.products[id].code = newCode;
-            // }
+            if (newCode !== '') {
+                const codeExisIndex = listadoProductos.findIndex(ex => ex.code === newCode);
+                if (codeExisIndex !== -1) {
+                    console.error("Codigo Ya existente");
+                    return;
+                }
+                listadoProductos[codeIndex].code = newCode;
+            }
             if (newStock !== '') {
                 listadoProductos[codeIndex].stock = newStock;
             }
-            console.log(listadoProductos);
+            //console.log(listadoProductos);
             await fs.promises.writeFile(this.path, JSON.stringify(listadoProductos))
         }
         return;
@@ -158,7 +184,7 @@ class ProductManager {
             if (fs.existsSync(this.path)) {
                 const byIDdata = await fs.promises.readFile(this.path, 'utf-8');
                 listadoProductos = JSON.parse(byIDdata);
-                console.log(listadoProductos);
+                //console.log(listadoProductos);
             }
         } catch (error) {
             console.error('Error al leer el archivo:', error.message);
@@ -171,7 +197,7 @@ class ProductManager {
             console.error("Producto con ID:" + id + " not Found");
         } else {
             listadoProductos.splice(codeIndexDelete, 1);
-            console.log(listadoProductos);
+            //console.log(listadoProductos);
             await fs.promises.writeFile(this.path, JSON.stringify(listadoProductos))
         }
         return;
