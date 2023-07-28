@@ -10,7 +10,7 @@ async function main() {
         // let products = await manejadorDeProductos.getProducts();
         // console.log(products);
 
-        //Se llamará al método “addProduct” cargandose 3 productos correctamente
+        //Se llamará al método “addProduct”
         //manejadorDeProductos.addProduct("Producto Prueba", "Este es un producto de prueba", 200, "sin imagen", "abc123", 25);
         //manejadorDeProductos.addProduct("Jabon Natura", "Jabon para cuerpo y manos", 125, "/img/limpieza/jabon01.jpg", "AB-100", 50);
         //manejadorDeProductos.addProduct("Shampoo Clear", "Shampoo anticaspa", 740, "/img/cuidado/shampoo01.jpg", "SH-200", 20);

@@ -6,7 +6,6 @@ class ProductManager {
     constructor(path) {
         this.products = [];
         this.path = path;
-        //this.products = this.productosAlmacenados();
     };
 
     productosAlmacenados = async () => {
@@ -17,17 +16,14 @@ class ProductManager {
                     return [];
                 } else {
                     const listadoProductos = JSON.parse(data);
-                    //console.log(listadoProductos);
                     return listadoProductos;
                 }
             } else {
-                // Si el archivo no existe, retornar un array vacío o null
                 return [];
             }
         } catch (error) {
             console.error('Error al leer el archivo:', error.message);
-            // En caso de error, puedes retornar un array vacío o null
-            return [];
+            return []; // En caso de error, puedes retornar un array vacío o null
         }
     }
 
@@ -94,17 +90,14 @@ class ProductManager {
                     return [];
                 } else {
                     const listadoProductos = JSON.parse(data);
-                    //console.log(listadoProductos);
                     return listadoProductos;
                 }
             } else {
-                // Si el archivo no existe, retornar un array vacío o null
-                return [];
+                return []; // Si el archivo no existe, retornar un array vacío o null
             }
         } catch (error) {
             console.error('Error al leer el archivo:', error.message);
-            // En caso de error, puedes retornar un array vacío o null
-            return [];
+            return []; // En caso de error, puedes retornar un array vacío o null
         }
     };
 
@@ -117,13 +110,11 @@ class ProductManager {
             }
         } catch (error) {
             console.error('Error al leer el archivo:', error.message);
-            // En caso de error, puedes retornar un array vacío o null
-            return [];
+            return []; // En caso de error, puedes retornar un array vacío o null
         }
         const codeIndex = listadoProductosID.findIndex(e => e.id === id);
         if (codeIndex === -1) {
             return ("Producto con ID:" + id + " not Found");
-            //return [];
         } else {
             return listadoProductosID[codeIndex];
         }
@@ -136,16 +127,13 @@ class ProductManager {
             if (fs.existsSync(this.path)) {
                 const byIDdata = await fs.promises.readFile(this.path, 'utf-8');
                 listadoProductos = JSON.parse(byIDdata);
-                //console.log(listadoProductos);
             }
         } catch (error) {
             console.error('Error al leer el archivo:', error.message);
-            // En caso de error, puedes retornar un array vacío o null
-            return [];
+            return []; // En caso de error, puedes retornar un array vacío o null
         }
 
         const codeIndex = listadoProductos.findIndex(e => e.id === id);
-        //console.log(codeIndex);
         if (codeIndex === -1) {
             console.error("Producto con ID:" + id + " not Found");
         } else {
@@ -172,7 +160,6 @@ class ProductManager {
             if (newStock !== '') {
                 listadoProductos[codeIndex].stock = newStock;
             }
-            //console.log(listadoProductos);
             await fs.promises.writeFile(this.path, JSON.stringify(listadoProductos))
         }
         return;
@@ -184,12 +171,10 @@ class ProductManager {
             if (fs.existsSync(this.path)) {
                 const byIDdata = await fs.promises.readFile(this.path, 'utf-8');
                 listadoProductos = JSON.parse(byIDdata);
-                //console.log(listadoProductos);
             }
         } catch (error) {
             console.error('Error al leer el archivo:', error.message);
-            // En caso de error, puedes retornar un array vacío o null
-            return [];
+            return []; // En caso de error, puedes retornar un array vacío o null
         }
 
         const codeIndexDelete = listadoProductos.findIndex(e => e.id === id);
@@ -197,7 +182,6 @@ class ProductManager {
             console.error("Producto con ID:" + id + " not Found");
         } else {
             listadoProductos.splice(codeIndexDelete, 1);
-            //console.log(listadoProductos);
             await fs.promises.writeFile(this.path, JSON.stringify(listadoProductos))
         }
         return;
