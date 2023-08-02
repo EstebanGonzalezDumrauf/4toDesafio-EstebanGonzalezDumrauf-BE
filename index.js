@@ -1,4 +1,4 @@
-const ManagerProductos = require('./productManager');
+const ManagerProductos = require('./src/productManager');
 const http = require('http');
 
 const server = http.createServer((req, res) =>{
