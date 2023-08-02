@@ -1,5 +1,5 @@
 {
-  "name": "2doentregabler-be",
+  "name": "3erentregabler-be",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,16 +8,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EstebanGonzalezDumrauf/2doDesafio-GonzalezDumrauf-BE.git"
+    "url": "git+https://github.com/EstebanGonzalezDumrauf/3erDesafio-GonzalezDumrauf-BE"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/EstebanGonzalezDumrauf/2doDesafio-GonzalezDumrauf-BE/issues"
+    "url": "https://github.com/EstebanGonzalezDumrauf/3erDesafio-GonzalezDumrauf-BE/issues"
   },
-  "homepage": "https://github.com/EstebanGonzalezDumrauf/2doDesafio-GonzalezDumrauf-BE#readme",
+  "homepage": "https://github.com/EstebanGonzalezDumrauf/3erDesafio-GonzalezDumrauf-BE#readme",
   "dependencies": {
+    "express": "^4.18.2",
     "nodemon": "^3.0.1"
   }
 }
