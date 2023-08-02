@@ -11,7 +11,7 @@ async function main() {
         // console.log(products);
 
         //Se llamará al método “addProduct”
-        //manejadorDeProductos.addProduct("Producto Prueba", "Este es un producto de prueba", 200, "sin imagen", "abc123", 25);
+        //manejadorDeProductos.addProduct("Producto Prueba", "Este es un producto de prueba", 200, "sin imagen", "abc122", 25);
         //manejadorDeProductos.addProduct("Jabon Natura", "Jabon para cuerpo y manos", 125, "/img/limpieza/jabon01.jpg", "AB-100", 50);
         //manejadorDeProductos.addProduct("Shampoo Clear", "Shampoo anticaspa", 740, "/img/cuidado/shampoo01.jpg", "SH-200", 20);
         //manejadorDeProductos.addProduct("Colgate Triple Accion", "Pasta dental", 600, "/img/cuidado/shampoo01.jpg", "SH-201", 100);
@@ -46,7 +46,7 @@ async function main() {
         // console.log(productoSelected);
 
         // //Se llamará al metodo "deleteProduct" se evaluará que realmente elimine el producto o que arroje un error
-        // manejadorDeProductos.deleteProduct(4);
+        //manejadorDeProductos.deleteProduct(3);
 
     } catch (error) {
         console.error('Error:', error.message);

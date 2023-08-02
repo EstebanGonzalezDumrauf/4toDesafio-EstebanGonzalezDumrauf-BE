@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/EstebanGonzalezDumrauf/2doDesafio-GonzalezDumrauf-BE/issues"
   },
-  "homepage": "https://github.com/EstebanGonzalezDumrauf/2doDesafio-GonzalezDumrauf-BE#readme"
+  "homepage": "https://github.com/EstebanGonzalezDumrauf/2doDesafio-GonzalezDumrauf-BE#readme",
+  "dependencies": {
+    "nodemon": "^3.0.1"
+  }
 }
