@@ -114,7 +114,7 @@ class ProductManager {
         }
         const codeIndex = listadoProductosID.findIndex(e => e.id === id);
         if (codeIndex === -1) {
-            return ("Producto con ID:" + id + " not Found");
+            return ("Producto con ID:" + id + " no encontrado!!!");
         } else {
             return listadoProductosID[codeIndex];
         }

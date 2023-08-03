@@ -2,6 +2,7 @@ const express = require('express');
 const ProductManager = require('./productManager'); // Importamos la clase desde el archivo productManager.js
 
 const app = express();
+app.use(express.urlencoded({extended: true})); 
 const path = 'BD.json' // Debes proporcionar la ruta correcta donde se guardará el archivo JSON
 
 app.get('/', (req, res) => {
@@ -10,14 +11,24 @@ app.get('/', (req, res) => {
 
 app.get('/products', async (req, res) => {
     const manejadorDeProductos = new ProductManager(path); 
-    let products = await manejadorDeProductos.getProducts(); 
+    let listadoProductos = [];
 
-    res.send(products);
+    let cantidadLimite = +req.query.limit;
+
+    if (!cantidadLimite) {
+        let products = await manejadorDeProductos.getProducts(); 
+        res.send(products);
+        return;
+    }
+
+    listadoProductos = await manejadorDeProductos.getProducts(); 
+
+    res.send(listadoProductos.slice(0,cantidadLimite));
 });
 
 app.get('/products/:id', async (req, res) => {
     const manejadorDeProductos = new ProductManager(path); 
-    let idProdu = parseInt(req.params.id);
+    let idProdu = +req.params.id;
     let productByID = await manejadorDeProductos.getProductById(idProdu); // Usa await porque la función getProducts es asíncrona
 
     res.send(productByID);
