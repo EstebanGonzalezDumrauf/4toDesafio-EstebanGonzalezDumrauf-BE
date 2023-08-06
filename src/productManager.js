@@ -27,11 +27,12 @@ class ProductManager {
         }
     }
 
-    addProduct = async (title, description, price, thumbnail, code, stock) => {
+    addProduct = async (title, description, price, status, thumbnail, code, stock) => {
         const producto = {
             title,
             description,
             price,
+            status,
             thumbnail,
             code,
             stock
@@ -60,6 +61,12 @@ class ProductManager {
             console.error("Error. El campo precio no tiene informacion.");
             return;
         }
+
+        if (status === "") {
+            console.error("Error. El campo status no tiene informacion.");
+            return;
+        }
+
 
         if (thumbnail === "") {
             console.error("Error. El campo ruta de la Imagen no tiene informacion.");
@@ -121,7 +128,7 @@ class ProductManager {
     };
 
 
-    updateProduct = async (id, newTitle, newDescription, newPrice, newThumbnail, newCode, newStock) => {
+    updateProduct = async (id, newTitle, newDescription, newPrice, newStatus, newThumbnail, newCode, newStock) => {
         let listadoProductos = [];
         try {
             if (fs.existsSync(this.path)) {
@@ -145,6 +152,9 @@ class ProductManager {
             }
             if (newPrice !== '') {
                 listadoProductos[codeIndex].price = newPrice;
+            }
+            if (newStatus !== '') {
+                listadoProductos[codeIndex].status = newStatus;
             }
             if (newThumbnail !== '') {
                 listadoProductos[codeIndex].thumbnail = newThumbnail;
