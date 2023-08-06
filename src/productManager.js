@@ -47,41 +47,40 @@ class ProductManager {
             producto.id = valorrecuperado[valorrecuperado.length - 1].id + 1;
         }
 
-        if (title === "") {
+        if (title === "" || title === undefined) {
             console.error("Error. El campo titulo no tiene informacion.");
-            return;
+            return -1;
         }
 
-        if (description === "") {
+        if (description === "" || description === undefined) {
             console.error("Error. El campo descripción no tiene informacion.");
-            return;
+            return -1;
         }
 
-        if (price === "") {
+        if (price === "" || price === undefined) {
             console.error("Error. El campo precio no tiene informacion.");
-            return;
+            return -1;
         }
 
-        if (status === "") {
+        if (status === "" || status === undefined) {
             console.error("Error. El campo status no tiene informacion.");
-            return;
+            return -1;
         }
-
 
         if (thumbnail === "") {
             console.error("Error. El campo ruta de la Imagen no tiene informacion.");
-            return;
+            return -1;
         }
 
-        if (stock === "") {
+        if (stock === "" || stock === undefined) {
             console.error("Error. El campo Stock no tiene informacion.");
-            return;
+            return -1;
         }
 
         const codeIndex = valorrecuperado.findIndex(e => e.code === code);
         if (codeIndex !== -1) {
             console.error("Codigo Ya existente");
-            return;
+            return -1;
         }
 
         valorrecuperado.push(producto);
@@ -137,37 +136,39 @@ class ProductManager {
             }
         } catch (error) {
             console.error('Error al leer el archivo:', error.message);
-            return []; // En caso de error, puedes retornar un array vacío o null
+            return -3; // En caso de error, puedes retornar un array vacío o null
         }
 
-        const codeIndex = listadoProductos.findIndex(e => e.id === id);
+        const codeIndex = listadoProductos.findIndex(e => e.id == id);
         if (codeIndex === -1) {
-            console.error("Producto con ID:" + id + " not Found");
+            return -2;
         } else {
-            if (newTitle !== '') {
+            if (newTitle !== '' && newTitle !== undefined) {
                 listadoProductos[codeIndex].title = newTitle;
+            } else {
+                listadoProductos[codeIndex].title;
             }
-            if (newDescription !== '') {
+            if (newDescription !== '' && newDescription !== undefined) {
                 listadoProductos[codeIndex].description = newDescription;
             }
-            if (newPrice !== '') {
+            if (newPrice !== '' && newPrice !== undefined) {
                 listadoProductos[codeIndex].price = newPrice;
             }
-            if (newStatus !== '') {
+            if (newStatus !== '' && newStatus !== undefined) {
                 listadoProductos[codeIndex].status = newStatus;
             }
             if (newThumbnail !== '') {
                 listadoProductos[codeIndex].thumbnail = newThumbnail;
             }
-            if (newCode !== '') {
+            if (newCode !== '' && newCode !== undefined) {
                 const codeExisIndex = listadoProductos.findIndex(ex => ex.code === newCode);
                 if (codeExisIndex !== -1) {
                     console.error("Codigo Ya existente");
-                    return;
+                    return -1;
                 }
                 listadoProductos[codeIndex].code = newCode;
             }
-            if (newStock !== '') {
+            if (newStock !== '' && newStock !== undefined) {
                 listadoProductos[codeIndex].stock = newStock;
             }
             await fs.promises.writeFile(this.path, JSON.stringify(listadoProductos))
@@ -184,12 +185,12 @@ class ProductManager {
             }
         } catch (error) {
             console.error('Error al leer el archivo:', error.message);
-            return []; // En caso de error, puedes retornar un array vacío o null
+            return -2; // En caso de error, puedes retornar un array vacío o null
         }
 
         const codeIndexDelete = listadoProductos.findIndex(e => e.id === id);
         if (codeIndexDelete === -1) {
-            console.error("Producto con ID:" + id + " not Found");
+            return -1;
         } else {
             listadoProductos.splice(codeIndexDelete, 1);
             await fs.promises.writeFile(this.path, JSON.stringify(listadoProductos))
