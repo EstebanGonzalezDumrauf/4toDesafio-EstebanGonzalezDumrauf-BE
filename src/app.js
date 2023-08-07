@@ -128,7 +128,28 @@ app.get('/api/carts/:cid', async (req, res) => {
     res.send(cartByCID);
 });
 
+app.post('/api/carts/:cid/product/:pid', async (req, res) => {
+    const manejadorCarrito = new CartManager(pathcarrito); 
 
+    //let carrito = req.body;
+    let idProdu = +req.params.pid;
+    let idCart = +req.params.cid;
+    let quantity = 1;
+    let statusInsert;
+    
+    statusInsert = await manejadorCarrito.addProductToCart(idCart,idProdu,quantity);
+
+    //res.send('<h1> SERVIDOR DE PRODUCTOS </h1>' + statusInsert);
+    if (statusInsert == -1){
+        return res.status(400).send({status: 'error', error: 'Se produjo un error al crear el carrito de compras'})
+    }
+
+    if (statusInsert == -2){
+        return res.status(400).send({status: 'error', error: 'No existe un carrito con ese cid'})
+    }
+
+    return res.send({status: 'success', message:'Carrito cargado correctamente con el nuevo producto'});
+});
 
 
 
