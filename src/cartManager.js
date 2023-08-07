@@ -36,9 +36,9 @@ class cartManager {
         //console.log(valorrecuperado);
 
         if (valorrecuperado.length === 0) {
-            carrito.id = 1;
+            carrito.cid = 1;
         } else {
-            carrito.id = valorrecuperado[valorrecuperado.length - 1].id + 1;
+            carrito.cid = valorrecuperado[valorrecuperado.length - 1].cid + 1;
         }
 
         if (arrayCart === "" || arrayCart === undefined) {
@@ -48,6 +48,25 @@ class cartManager {
 
         valorrecuperado.push(carrito);
         await fs.promises.writeFile(this.path, JSON.stringify(valorrecuperado))
+    };
+
+    getCartByCId = async (cid) => {
+        let listadoCartsID = [];
+        try {
+            if (fs.existsSync(this.path)) {
+                const byCIDdata = await fs.promises.readFile(this.path, 'utf-8');
+                listadoCartsID = JSON.parse(byCIDdata);
+            }
+        } catch (error) {
+            //console.error('Error al leer el archivo:', error.message);
+            return -1; 
+        }
+        const codeIndex = listadoCartsID.findIndex(e => e.cid === cid);
+        if (codeIndex === -1) {
+            return -2; //("Producto con ID:" + id + " no encontrado!!!");
+        } else {
+            return listadoCartsID[codeIndex];
+        }
     };
 
 }

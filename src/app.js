@@ -111,8 +111,21 @@ app.post('/api/carts', async (req, res) => {
     return res.send({status: 'success', message:'Carrito Creado correctamente'});
 });
 
-app.listen(8080, () => {
-    console.log('Server Operativo en puerto 8080');
+app.get('/api/carts/:cid', async (req, res) => {
+    const manejadorCarrito = new CartManager(pathcarrito); 
+    let cidCart = +req.params.cid;
+    let cartByCID = await manejadorCarrito.getCartByCId(cidCart); // Usa await porque la función getProducts es asíncrona
+
+    if (cartByCID === -2) {
+        return res.status(400).send({status: 'error', error: 'El CID no corresponde a un carrito válido'})
+        
+    }
+
+    if (cartByCID === -1) {
+        return res.status(400).send({status: 'error', error: 'Se produjo un error al obtener el carrito'})
+    }
+
+    res.send(cartByCID);
 });
 
 
@@ -120,6 +133,15 @@ app.listen(8080, () => {
 
 
 
+
+
+
+
+
+
+app.listen(8080, () => {
+    console.log('Server Operativo en puerto 8080');
+});
 
 // import express from 'express';
 // import manager from './productManager';
