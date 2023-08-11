@@ -1,22 +1,24 @@
 {
-  "name": "3erentregabler-be",
+  "name": "PrimerPreentrega-be",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "dev": "node --watch app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EstebanGonzalezDumrauf/3erDesafio-GonzalezDumrauf-BE"
+    "url": "git+https://github.com/EstebanGonzalezDumrauf/1ER-PreEntrega-GonzalezDumraufEsteban"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/EstebanGonzalezDumrauf/3erDesafio-GonzalezDumrauf-BE/issues"
+    "url": "https://github.com/EstebanGonzalezDumrauf/1ER-PreEntrega-GonzalezDumraufEsteban/issues"
   },
-  "homepage": "https://github.com/EstebanGonzalezDumrauf/3erDesafio-GonzalezDumrauf-BE#readme",
+  "homepage": "https://github.com/EstebanGonzalezDumrauf/1ER-PreEntrega-GonzalezDumraufEsteban#readme",
   "dependencies": {
     "express": "^4.18.2",
     "nodemon": "^3.0.1"
