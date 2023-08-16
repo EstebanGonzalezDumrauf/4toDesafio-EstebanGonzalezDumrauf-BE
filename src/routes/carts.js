@@ -39,9 +39,6 @@ function convertirArreglo(arreglo) {
 
 
 
-
-
-
 router.post('/', async (req, res) => {
     const manejadorCarrito = new CartManager(pathcarrito);
 
