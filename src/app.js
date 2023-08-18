@@ -8,6 +8,8 @@ const __dirName = require('./utils.js');
 const cartsRouter = require('./routes/carts.js');
 const productsRouter  = require('./routes/products.js');
 const viewsRouter = require('./routes/views.js');
+const socketIO = require('socket.io');
+
 
 const app = express();
 app.engine('handlebars', handlebars.engine());
@@ -23,16 +25,23 @@ app.use('/', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/', viewsRouter)
 
-// app.get('/', (req, res) => {
-//     let producto = {
-//         name:'Crema de manos',
-//         cantidad:2
-//     }
+const http = require('http');
+const server = http.createServer(app);
+const socketServer = socketIO(server);
 
-//     res.render('index', producto)
-// })
+socketServer.on('connection', socket =>{
+    console.log('Nuevo Cliente conectado');
+    socket.on('message', data =>{
+        console.log(data);
+    })
 
+    socket.emit('eventoParaSocketIndividual', 'Solo lo debe recibir el socket');
+    socket.broadcast.emit('eventoParatodosMenosElSocketActual', 'Lo deben recibir todos menos el socket actual');
+    socketServer.emit('eventoParaTodos', 'Lo deben recbir todos los sockets');
 
-const server = app.listen(8080, () => {
+})
+
+server.listen(8080, () => {
     console.log('Server ON en puerto 8080');
 });
+
