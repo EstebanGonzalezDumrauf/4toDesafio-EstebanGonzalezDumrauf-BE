@@ -21,4 +21,30 @@ router.get('/', async (req, res) => {
     res.render('index', {productos: listadoProductos.slice(0,cantidadLimite)})
 });
 
+
+router.get('/realtimeproducts', async (req, res) => {
+
+    const manejadorDeProductos = new ProductManager(path); 
+    let listadoProductos = [];
+
+    let cantidadLimite = +req.query.limit;
+
+    if (!cantidadLimite) {
+        let products = await manejadorDeProductos.getProducts(); 
+        res.render('realTimeProducts', {productos: products});
+        return;
+    }
+
+    listadoProductos = await manejadorDeProductos.getProducts(); 
+
+    res.render('realTimeProducts', {productos: listadoProductos.slice(0,cantidadLimite)})
+
+
+    // const manejadorDeProductos = new ProductManager(path);
+    // const products = await manejadorDeProductos.getProducts();
+
+    // res.render('realTimeProducts', { productos: products });
+});
+
+
 module.exports = router;

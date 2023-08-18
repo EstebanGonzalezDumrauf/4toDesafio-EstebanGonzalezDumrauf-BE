@@ -1,6 +1,9 @@
-const { Router } = require('express');
-const ProductManager = require('../productManager'); 
+const {
+    Router
+} = require('express');
+const ProductManager = require('../productManager');
 const router = Router();
+const socketIO = require('socket.io');
 
 const path = 'productos.json' // Debes proporcionar la ruta correcta donde se guardará el archivo JSON
 
@@ -23,59 +26,83 @@ const path = 'productos.json' // Debes proporcionar la ruta correcta donde se gu
 // });
 
 router.get('/', async (req, res) => {
-    const manejadorDeProductos = new ProductManager(path); 
+    const manejadorDeProductos = new ProductManager(path);
     let listadoProductos = [];
 
     let cantidadLimite = +req.query.limit;
 
     if (!cantidadLimite) {
-        let products = await manejadorDeProductos.getProducts(); 
-        res.render('index', {productos: products});
+        let products = await manejadorDeProductos.getProducts();
+        res.render('index', {
+            productos: products
+        });
         return;
     }
 
-    listadoProductos = await manejadorDeProductos.getProducts(); 
+    listadoProductos = await manejadorDeProductos.getProducts();
 
-    res.render('index', {productos: listadoProductos.slice(0,cantidadLimite)})
+    res.render('index', {
+        productos: listadoProductos.slice(0, cantidadLimite)
+    })
 });
 
 router.post('/', async (req, res) => {
-    const manejadorDeProductos = new ProductManager(path); 
+    const manejadorDeProductos = new ProductManager(path);
 
     let producto = req.body;
     let statusInsert;
-    
+
     statusInsert = await manejadorDeProductos.addProduct(producto.title, producto.description, producto.price, producto.status, producto.thumbnail, producto.code, producto.stock);
 
-    if (statusInsert == -1){
-        return res.status(400).send({status: 'error', error: 'Se produjo un error al crear el producto'})
+    if (statusInsert == -1) {
+        return res.status(400).send({
+            status: 'error',
+            error: 'Se produjo un error al crear el producto'
+        })
     }
-    return res.send({status: 'success', message:'Producto Creado correctamente'});
+
+    //PARA LA CONSIGNA
+    socketServer.emit('createProduct');
+    return res.send({
+        status: 'success',
+        message: 'Producto Creado correctamente'
+    });
+    //ESTO FUNCIONAAAAAAAAAA
+    //return res.send({status: 'success', message:'Producto Creado correctamente'});
 });
 
 
 router.put('/:id', async (req, res) => {
-    const manejadorDeProductos = new ProductManager(path); 
+    const manejadorDeProductos = new ProductManager(path);
     const productID = req.params.id;
     let producto = req.body;
     let statusUpdate;
-    
+
     statusUpdate = await manejadorDeProductos.updateProduct(productID, producto.title, producto.description, producto.price, producto.status, producto.thumbnail, producto.code, producto.stock);
 
-    if (statusUpdate == -1){
-        return res.status(400).send({status: 'error', error: 'Se produjo un error al modificar el producto'})
-    } 
-    
-    if (statusUpdate == -2) {
-        return res.status(400).send({status: 'error', error: 'No existe un producto con ese ID'})
+    if (statusUpdate == -1) {
+        return res.status(400).send({
+            status: 'error',
+            error: 'Se produjo un error al modificar el producto'
+        })
     }
 
-    return res.send({status: 'success', message:'Producto Modificado correctamente'});
+    if (statusUpdate == -2) {
+        return res.status(400).send({
+            status: 'error',
+            error: 'No existe un producto con ese ID'
+        })
+    }
+
+    return res.send({
+        status: 'success',
+        message: 'Producto Modificado correctamente'
+    });
 });
 
 
 router.get('/:id', async (req, res) => {
-    const manejadorDeProductos = new ProductManager(path); 
+    const manejadorDeProductos = new ProductManager(path);
     let idProdu = +req.params.id;
     let productByID = await manejadorDeProductos.getProductById(idProdu); // Usa await porque la función getProducts es asíncrona
 
@@ -84,19 +111,36 @@ router.get('/:id', async (req, res) => {
 
 
 router.delete('/:id', async (req, res) => {
-    const manejadorDeProductos = new ProductManager(path); 
+    const manejadorDeProductos = new ProductManager(path);
     let idProdu = +req.params.id;
     let DelproductByID = await manejadorDeProductos.deleteProduct(idProdu); // Usa await porque la función getProducts es asíncrona
 
     if (DelproductByID === -2) {
-        return res.status(400).send({status: 'error', error: 'Se produjo un error al modificar el producto'})
+        return res.status(400).send({
+            status: 'error',
+            error: 'Se produjo un error al modificar el producto'
+        })
     }
 
     if (DelproductByID === -1) {
-        return res.status(400).send({status: 'error', error: 'El ID no corresponde a un producto válido'})
+        return res.status(400).send({
+            status: 'error',
+            error: 'El ID no corresponde a un producto válido'
+        })
     }
 
-    return res.send({status: 'success', message:'Producto Eliminado correctamente'});
+    //PARA LA CONSIGNA
+    // Emite el evento de eliminación de producto a través de sockets
+    req.app.get('socketServer').emit('deleteProduct');
+
+    return res.send({
+        status: 'success',
+        message: 'Producto Eliminado correctamente'
+    });
+
+
+    //ESTO FUNCIONAAAAAAAAAA
+    //return res.send({status: 'success', message:'Producto Eliminado correctamente'});
 });
 
 

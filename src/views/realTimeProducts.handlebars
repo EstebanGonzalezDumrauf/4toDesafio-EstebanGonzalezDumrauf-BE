@@ -1,0 +1,12 @@
+<div>
+    <h1>PRODUCTOS CON WEBSOCKETS - TOTAL: {{productos.length}}</h1>
+    {{#each productos}}
+        <p>Nombre: {{this.title}}</p>
+        <p>Producto: {{this.description}}</p>
+        <p>Precio: $ {{this.price}}</p>
+        <p>---------------------------------------------------------------------------</p>
+    {{/each}}
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>
