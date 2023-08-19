@@ -31,22 +31,24 @@ const server = http.createServer(app);
 const socketServer = socketIO(server);
 app.set('socketServer', socketServer); 
 
-socketServer.on('connection', socket =>{
-    console.log('Nuevo Cliente conectado');
-
-    socket.on('createProduct', () => {
-        // Cuando se crea un nuevo producto, emite un evento a todos los clientes
-        socketServer.emit('productCreated');
-    });
-
-    socket.on('deleteProduct', () => {
-        // Cuando se elimina un producto, emite un evento a todos los clientes
-        socketServer.emit('productDeleted');
-    });
-
-})
-
 server.listen(8080, () => {
     console.log('Server ON en puerto 8080');
 });
+
+
+socketServer.on('connection', socket =>{
+    console.log('Nuevo Cliente conectado');
+
+    socket.on('aviso', data =>{
+        console.log(data);
+    })
+
+    socket.on('changes', () => {
+        // Cuando se elimina un producto, emite un evento a todos los clientes
+        console.log('Se aviso que el producto fue eliminado');
+        socketServer.emit('changes');
+    });
+})
+
+
 

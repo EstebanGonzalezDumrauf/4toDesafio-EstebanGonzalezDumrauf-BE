@@ -39,11 +39,6 @@ router.get('/realtimeproducts', async (req, res) => {
 
     res.render('realTimeProducts', {productos: listadoProductos.slice(0,cantidadLimite)})
 
-
-    // const manejadorDeProductos = new ProductManager(path);
-    // const products = await manejadorDeProductos.getProducts();
-
-    // res.render('realTimeProducts', { productos: products });
 });
 
 

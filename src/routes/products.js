@@ -62,11 +62,14 @@ router.post('/', async (req, res) => {
     }
 
     //PARA LA CONSIGNA
-    socketServer.emit('createProduct');
+    // Emite el evento de eliminación de producto a través de sockets
+    req.app.get('socketServer').emit('changes');
+
     return res.send({
         status: 'success',
         message: 'Producto Creado correctamente'
     });
+
     //ESTO FUNCIONAAAAAAAAAA
     //return res.send({status: 'success', message:'Producto Creado correctamente'});
 });
@@ -131,7 +134,7 @@ router.delete('/:id', async (req, res) => {
 
     //PARA LA CONSIGNA
     // Emite el evento de eliminación de producto a través de sockets
-    req.app.get('socketServer').emit('deleteProduct');
+    req.app.get('socketServer').emit('changes');
 
     return res.send({
         status: 'success',
